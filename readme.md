@@ -158,3 +158,119 @@ app.use(async (ctx) => {
 app.listen(3000)
 console.log('服务器启动了')
 ```
+
+#### koa-router
+
+- 安装
+
+```javascript
+npm i @koa/router
+```
+
+- 引用
+
+```javascript
+const Koa = require('koa')
+const Router = require('@koa/router')
+
+const app = new Koa()
+const router = new Router()
+
+router.get('/', (ctx, next) => {
+  ctx.body = "hello"
+})
+
+app
+  .use(router.routes())
+  .use(router.allowedMethods())
+app.listen(3000)
+console.log('服务器启动了')
+```
+
+koa-router 处理客户端传来的参数。
+
+- ctx.querystring
+
+```javascript
+router.get('/', (ctx, next) => {
+  console.log(ctx.querystring)
+})
+```
+
+浏览器地址输入：http://localhost:3000/?name=lisi&age=18
+
+控制台返回："name=lisi&age=18"
+
+- ctx.query
+
+```javascript
+router.get('/', (ctx, next) => {
+  console.log(ctx.query)
+})
+```
+
+浏览器地址输入：http://localhost:3000/?name=lisi&age=18
+
+控制台返回：{ name: 'lisi', age: '18' }
+
+- ctx.params
+
+```javascript
+router.get('/:name/:age', (ctx, next) => {
+  console.log(ctx.params)
+})
+```
+
+浏览器地址输入：http://localhost:3000/lisi/18
+
+控制台返回：{ name: 'lisi', age: '18' }
+
+处理 post 请求传过来的值
+
+- 安装koa2版本的koa-bodyparser@3中间件
+
+```javascript
+npm install --save koa-bodyparser@3
+```
+
+- 引用 koa-bodyparser@3
+
+```javascript
+const bodyParser = require('koa-bodyparser')
+// 使用ctx.body解析中间件
+app.use(bodyParser())
+```
+
+- 接收 post 请求传来的数据
+
+先展示一个提交表单的页面
+
+```javascript
+router.get('/', (ctx) => {
+  let html = `
+  <h1>koa2 request post demo</h1>
+  <form method="POST" action="/regist">
+    <p>userName</p>
+    <input name="userName" /><br/>
+    <p>nickName</p>
+    <input name="nickName" /><br/>
+    <p>email</p>
+    <input name="email" /><br/>
+    <button type="submit">submit</button>
+  </form>
+`
+  ctx.body = html
+})
+```
+
+接收 post 请求传来的数据
+
+```javascript
+router.post('/regist',(ctx) => {
+  console.log(ctx.request.body)
+})
+```
+
+![](image/readme/1632112984102.png)
+
+控制台打印信息：{ userName: '111', nickName: '222', email: '333' }
