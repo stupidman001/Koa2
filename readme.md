@@ -4,7 +4,8 @@
 
 1. 创建一个包	npm init -y
 2. 安装 koa2 包	npm i koa
-3. 创建`index.js` 文件
+3. 创建 `index.js` 文件
+
    ```javascript
    const Koa = require('koa')
    const app = new Koa()
@@ -18,28 +19,20 @@
    ```
 
 ```javascript
-const Koa = require('koa')
+const Koa = require('koa')   // 默认去找 koa 包的 index.js 文件，如果没有 index.js 文件，就要在koa的 package.json 中找入口文件了。
 ```
-
-默认去找 koa 包的 index.js 文件，如果没有 index.js 文件，就要在 package.json 中找入口文件了。
 
 ```javascript
-"main": "lib/application.js",
+"main": "lib/application.js" // koa 包的主入口文件
 ```
-
-这个文件导出了一个类,所以在使用的时候是 new
 
 ```javascript
-module.exports = class Application extends Emitter { ... }
+module.exports = class Application extends Emitter { ... } // lib/application.js 导出了一个类，所以在使用 koa 的时候是 new
 ```
-
-app.use() 是用来加载中间件(第三方的包)。
 
 ```javascript
-app.listen(3000)
+app.listen(3000)  // 监听端口 3000
 ```
-
-监听端口 3000
 
 ```javascript
 app.use( async ( ctx ) => {
@@ -47,7 +40,7 @@ app.use( async ( ctx ) => {
 })
 ```
 
-app.use() 中可以写异步函数，也可以写同步函数，取决于业务。
+app.use() 是用来加载中间件(第三方的包)，app.use() 中可以写异步函数，也可以写同步函数，取决于业务。
 
 ctx.body = 'hello koa2'	属于同步函数，在浏览器中直接能看到结果。
 
@@ -60,18 +53,8 @@ function getData(){
   return data;
 }
 app.use( async ( ctx ) => {
-  ctx.body = getData()
+  ctx.body = getData() // 现在什么都打印不出来，只执行同步任务没有执行异步任务，data 是空的值，直接返回了。
 })
-```
-
-现在什么都打印不出来，只执行同步任务没有执行异步任务，data 是空的值，直接返回了。
-
-```javascript
-  var data 
-  setTimeout(() => {
-    data = Math.random();
-  },3000);
-  return data;
 ```
 
 解决方法：使用 async 和 await
