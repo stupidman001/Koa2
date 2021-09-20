@@ -372,3 +372,80 @@ app.use(static(
 ```javascript
 <img src="img/1.jpg">   // 默认去找 public 文件
 ```
+
+#### 连接数据库
+
+1. 打开 XAMPP，启动 mysql 服务![](image/readme/1632128504870.png)
+
+
+2. 打开 Navicat
+
+![](image/readme/1632128754573.png)
+
+可以点击测试连接，看 Navicat 和 MySQL 的连接情况。
+
+默认会有几个数据库
+
+![](image/readme/1632128884261.png)
+
+新建数据库 sql，新建表 t_user，插入数据。
+
+3. 下载 mysql 包：npm i mysql
+4. 项目中使用 mysql 包
+
+```javascript
+
+
+var mysql = require('mysql');
+var connection = mysql.createConnection({
+  host     : 'localhost',
+  user     : 'me',
+  password : 'secret',
+  database : 'my_db'
+});
+ 
+connection.connect();
+ 
+connection.query('SELECT 1 + 1 AS solution', function (error, results, fields) {
+  if (error) throw error;
+  console.log('The solution is: ', results[0].solution);
+});
+ 
+connection.end();
+```
+
+- 创建一个连接
+
+```javascript
+var connection = mysql.createConnection({});
+```
+
+```javascript
+  host     : 'localhost',   // 连接到本地
+  user     : 'root',	    // 用户名
+  password : '',	    // 密码
+  database : 'sql'	    // 要连接的数据库
+```
+
+- 连接
+
+```javascript
+connection.connect();
+```
+
+- 查询数据库
+
+```javascript
+connection.query('select * from t_user', function (error, results, fields) {
+  if (error) throw error;
+  console.log(results);
+});
+```
+
+- 关闭连接
+
+```javascript
+connection.end();
+```
+
+- 执行这个文件，在数据库中查询数据。
