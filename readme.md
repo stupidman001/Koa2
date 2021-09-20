@@ -274,3 +274,101 @@ router.post('/regist',(ctx) => {
 ![](image/readme/1632112984102.png)
 
 控制台打印信息：{ userName: '111', nickName: '222', email: '333' }
+
+
+#### 模板引擎
+
+给页面传递数据
+
+1. 安装 koa-views 中间件：npm install koa-views
+2. 安装 ejs：npm i ejs
+3. 创建 views 文件夹，放置的都是模板引擎。
+4. 创建 index.ejs 文件
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+<body>
+  <h1>
+    <%=title%>
+  </h1>
+  <p>
+    <%=message%>
+  </p>
+</body>
+</html>
+```
+
+5. 引用 koa-views 和 ejs
+
+```javascript
+const Koa = require('koa')
+const app = new Koa()
+const views = require('koa-views')
+const path = require('path')
+
+// 加载模板引擎
+app.use(
+  views(path.join(__dirname,"./views"),{
+    extension:"ejs"
+  })
+)
+
+app.use(async (ctx) => {
+  let title = "hello koa"
+  let message = "first use ejs"
+  await ctx.render("index",{
+    title,
+    message
+  })
+})
+app.listen(3000)
+console.log('服务器启动了')
+```
+
+```javascript
+// 加载模板引擎
+app.use(
+  views(path.join(__dirname,"./views"),{
+    extension:"ejs"
+  })
+)
+```
+
+找到 ejs 文件。
+
+```javascript
+  await ctx.render("index",{
+    title,
+    message
+  })
+```
+
+给 index.ejs 传递 title 、message 数据。
+
+在 ejs 文件中引入一张图片
+
+如果直接使用 绝对路径引入图片，图片是不可以显示的。使用中间件 koa-static
+
+```javascript
+npm install koa-static
+```
+
+引入
+
+```javascript
+const static = require('koa-static')
+app.use(static(
+  path.join(__dirname,'./public')   // public 文件夹专门存放静态资源
+))
+```
+
+在 main.js 文件中
+
+```javascript
+<img src="img/1.jpg">   // 默认去找 public 文件
+```
